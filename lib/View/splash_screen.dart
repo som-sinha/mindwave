@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
-import 'user_info_screen.dart'; // or your main menu
+import 'user_info_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return const Scaffold(
       body: Center(
         child: Text(
-          'My App Name',
+          'Mindwave',
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
       ),
