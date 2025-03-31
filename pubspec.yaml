@@ -9,6 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
+  google_sign_in:
+
 
 dev_dependencies:
   flutter_test:
