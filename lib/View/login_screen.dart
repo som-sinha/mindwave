@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 60),
               Image.asset(
-                'assets/mindwave_logo.png',
+                'lib/assets/mindwave_logo.png',
                 height: 100,
               ),
               const SizedBox(height: 10),
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: OutlinedButton.icon(
                   onPressed: signInWithGoogle,
                   icon: Image.asset(
-                    'assets/google_icon.jpg',
+                    'lib/assets/google_icon.png',
                     height: 20,
                   ),
                   label: const Text('Google'),
