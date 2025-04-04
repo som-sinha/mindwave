@@ -8,7 +8,6 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  // Define the sections for which feedback is needed.
   final List<String> sections = [
     'User Profiles',
     'Tutoring Mode',
@@ -19,9 +18,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     'Optional Features'
   ];
 
-  // Map to hold ratings for each section.
+
   late Map<String, int> ratings;
-  // Map to hold text controllers for comments for each section.
   late Map<String, TextEditingController> feedbackControllers;
 
   @override
@@ -39,7 +37,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     super.dispose();
   }
 
-  // Build a custom star rating row for a given section.
   Widget _buildRatingStars(String section) {
     int currentRating = ratings[section] ?? 0;
     return Row(
@@ -59,7 +56,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     );
   }
 
-  // Build the feedback widget for a given section.
   Widget _buildSectionFeedback(String section) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -86,17 +82,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     );
   }
 
-  // Handle submission of the feedback.
   void _submitFeedback() {
-    // Process feedback for each section.
     for (var section in sections) {
       print('Section: $section');
       print('Rating: ${ratings[section]}');
       print('Comments: ${feedbackControllers[section]!.text}');
     }
-    // Display a confirmation message.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Thanks for your feedback!")),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ThankYouPage()),
     );
   }
 
@@ -114,7 +108,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             style: TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
-          // Build feedback sections dynamically.
           ...sections.map((section) => _buildSectionFeedback(section)).toList(),
           const SizedBox(height: 20),
           Center(
@@ -124,6 +117,25 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ThankYouPage extends StatelessWidget {
+  const ThankYouPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: const Center(
+        child: Text(
+          'Thank you for submitting!',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
