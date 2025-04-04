@@ -55,7 +55,9 @@ class _QuizViewState extends State<QuizView> {
                         child: Text('View'),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/quiz');
+                        },
                         child: Text('Start'),
                       ),
                     ],
