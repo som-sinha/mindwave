@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'controllers/course_controller.dart';
+import 'views/course_list_view.dart';
 
 void main() {
-  runApp(const MainApp());
+  final CourseController cctrl = CourseController();
+  runApp(MainApp(controller: cctrl));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final CourseController controller;
+  const MainApp({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      home: CourseListView(ctrl: controller,),
     );
   }
 }
