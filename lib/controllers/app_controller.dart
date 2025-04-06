@@ -28,6 +28,4 @@ class AppController extends ChangeNotifier {
   (String, List<TopicModel>) _processCourseMaterial(subject, courseName,  courseMaterial) {
     return ('', []);
   }
-
-
 }
