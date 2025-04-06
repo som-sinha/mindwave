@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_view.dart';
-import 'user_info_view.dart';
 
 class AuthGate extends StatelessWidget {
   @override
@@ -12,9 +11,9 @@ class AuthGate extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasData) {
-          return UserInfoScreen(user: snapshot.data!);
-        }
+        // if (snapshot.hasData) {
+        //   return UserInfoScreen(user: snapshot.data!);
+        // }
         return const LoginView();
       },
     );

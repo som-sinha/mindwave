@@ -26,8 +26,8 @@ class CourseListView extends StatelessWidget {
                 child: Text('Profile'),
               ),
               const PopupMenuItem<String>(
-                value: 'settings',
-                child: Text('Settings'),
+                value: 'Provide Feedback',
+                child: Text('Provide Feedback'),
               ),
               const PopupMenuItem<String>(
                 value: 'logout',
@@ -38,6 +38,9 @@ class CourseListView extends StatelessWidget {
               if (value == 'logout') {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
+              }
+              if (value == 'Provide Feedback') {
+                Navigator.pushNamed(context, '/feedback');
               }
             },
           ),
