@@ -1,14 +1,48 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../controllers/course_controller.dart';
+import 'package:provider/provider.dart';
+import '../controllers/app_controller.dart';
 
 class CourseListView extends StatelessWidget {
-  final CourseController ctrl;
+  const CourseListView({super.key});
 
-  const CourseListView({super.key, required this.ctrl});
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.watch<AppController>();
+    
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Your Subjects')),
+      appBar: AppBar(
+        centerTitle: true, 
+        automaticallyImplyLeading: false,
+        title: const Text('Your Subjects'),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const CircleAvatar(
+              backgroundImage: NetworkImage('https://dummyimage.com/600x400/000/fff.png'),
+            ),
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'profile',
+                child: Text('Profile'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'settings',
+                child: Text('Settings'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text('Logout'),
+              ),
+            ],
+            onSelected: (value) async {
+              if (value == 'logout') {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+      ),
       body: Container(
         padding: EdgeInsets.all(8.0),
         child: ListView.builder(

@@ -7,4 +7,13 @@ class QuestionModel {
   String correctOption;
 
   QuestionModel(this.question, this.correctOption, this.options) : id = Uuid().v4();
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id' : id,
+      'question' : question,
+      'options': options,
+      'correctOption': correctOption
+    };
+  }
 }
