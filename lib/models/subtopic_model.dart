@@ -10,7 +10,14 @@ class SubtopicModel {
   QuizModel genQuiz;
   QuizModel reviewQuiz;
   
-  SubtopicModel(this.topic, this.subtopicName, this.description, this.userQuizzes, this.genQuiz, this.reviewQuiz) : id = Uuid().v4();
+  SubtopicModel({
+    required this.topic,
+    required this.subtopicName,
+    required this.description,
+    required this.userQuizzes,
+    required this.genQuiz,
+    required this.reviewQuiz,
+  }) : id = Uuid().v4();
 
   Map<String, dynamic> toFirestore() {
     return {

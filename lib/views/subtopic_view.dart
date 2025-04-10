@@ -1,10 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mindwave/controllers/app_controller.dart';
+import 'package:provider/provider.dart';
 import '../models/subtopic_model.dart';
+import '../models/quiz_model.dart';
 
-class SubtopicView extends StatelessWidget {
+class SubtopicView extends StatefulWidget {
   final SubtopicModel subtopic;
 
   const SubtopicView({super.key, required this.subtopic});
+
+  @override
+  State<SubtopicView> createState() => _SubtopicViewState(subtopic: subtopic);
+}
+  
+class _SubtopicViewState extends State<SubtopicView> {
+
+  final SubtopicModel subtopic;
+
+  _SubtopicViewState({required this.subtopic});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +26,7 @@ class SubtopicView extends StatelessWidget {
       backgroundColor: Color(0xFFF8EDF8),
       appBar: AppBar(
         backgroundColor: Colors.purple.shade100,
-        title: Text(subtopic.subtopicName),
+        title: Text(subtopic.subtopicName.isNotEmpty ? subtopic.subtopicName : 'Subtopic Title'),
         leading: const BackButton(),
         actions: const [
           Padding(
@@ -43,11 +57,10 @@ class SubtopicView extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.85),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Subtopic Title',
+                subtopic.subtopicName.isNotEmpty ? subtopic.subtopicName : 'Subtopic Title',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -66,7 +79,7 @@ class SubtopicView extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   '/quiz',
-                  arguments: subtopic,
+                  arguments: {subtopic.genQuiz, subtopic.reviewQuiz, subtopic.userQuizzes}
                 );
               },
               child: Container(
@@ -110,9 +123,8 @@ class SubtopicView extends StatelessWidget {
                   '/review',
                   arguments: {
                     'subtopicName': subtopic.subtopicName,
-                    'summary':
-                        'This is a placeholder summary for ${subtopic.subtopicName}. You can generate this dynamically using Gemini or content later.',
-                  },
+                    'summary': subtopic.description
+                  }
                 );
               },
               child: Container(

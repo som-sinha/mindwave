@@ -43,10 +43,6 @@ class _CourseListViewState extends State<CourseListView> {
             ),
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem<String>(
-                value: 'profile',
-                child: Text('Profile'),
-              ),
-              const PopupMenuItem<String>(
                 value: 'Provide Feedback',
                 child: Text('Provide Feedback'),
               ),
@@ -85,7 +81,7 @@ class _CourseListViewState extends State<CourseListView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TopicListView(course: course),
+                      builder: (context) => TopicListView(courseid: course.id),
                     ),
                   );
                 },

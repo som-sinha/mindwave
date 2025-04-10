@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindwave/controllers/auth_controller.dart';
+import 'package:mindwave/models/subtopic_model.dart';
 import 'package:mindwave/views/add_course_view.dart';
 import 'package:mindwave/views/feedback_view.dart';
 import 'package:mindwave/views/login_view.dart';
@@ -7,6 +8,7 @@ import 'package:mindwave/views/quiz.dart';
 import 'package:mindwave/views/quiz_view.dart';
 import 'package:mindwave/views/signup_view.dart';
 import 'package:mindwave/views/splash_screen.dart';
+import 'package:mindwave/views/subtopic_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -48,6 +50,13 @@ class MainApp extends StatelessWidget {
         '/login': (context) => LoginView(),
         '/signup': (context) => SignupView(),
         '/home': (context) => CourseListView(),
+        '/subtopic': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+          final subtopic = args is SubtopicModel ? args : (args as Set).first as SubtopicModel;
+          return SubtopicView(
+            subtopic: subtopic,
+          );
+        },
         '/feedback': (context) => FeedbackView(),
         '/addCourse': (context) => AddCourseView(),
         '/quiz': (context) => QuizView(),
@@ -59,10 +68,8 @@ class MainApp extends StatelessWidget {
             subtopicName: args['subtopicName']!,
             summary: args['summary']!,
           );
-
         },
       },
     );
   }
 }
-

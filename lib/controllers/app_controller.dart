@@ -45,16 +45,16 @@ class AppController extends ChangeNotifier {
       {
           final genQuiz = await _generateQuiz(st['subtopicName'], st['description'], mergedCourseMaterialLink);
           subtopics.add(SubtopicModel(
-            t['topic']['topicName'],
-            st['subtopicName'],
-            st['description'],
-            [],
-            QuizModel((genQuiz as List).map((q) => QuestionModel(
+            topic: t['topic']['topicName'],
+            subtopicName: st['subtopicName'],
+            description: st['description'],
+            userQuizzes: [],
+            genQuiz: QuizModel((genQuiz as List).map((q) => QuestionModel(
               q['questionText'],
               q['correctOption'],
               (q['options'] as List).cast<String>(),
             )).toList()),
-            QuizModel([]),
+            reviewQuiz: QuizModel([]),
           ));
       }
       topics.add(TopicModel(t['topic']['topicName'], subtopics));
@@ -87,71 +87,147 @@ class AppController extends ChangeNotifier {
         [],
       )..id = courseData['id'];
 
-      final topicSnapshots = await courseDoc.reference.collection('topics').get();
-      final topics = <TopicModel>[];
-
-      for (final topicDoc in topicSnapshots.docs) {
-        final topicData = topicDoc.data();
-        final topic = TopicModel(
-          topicData['topicName'] ?? '',
-          [],
-        )..id = topicData['id'];
-
-        final subtopicSnapshots = await topicDoc.reference.collection('subtopics').get();
-        final subtopics = <SubtopicModel>[];
-
-        for (final subtopicDoc in subtopicSnapshots.docs) {
-          final subtopicData = subtopicDoc.data();
-
-          final quizSnapshots = await subtopicDoc.reference.collection('quizzes').get();
-          QuizModel genQuiz = QuizModel([]);
-          QuizModel reviewQuiz = QuizModel([]);
-          List<QuizModel> userQuizzes = [];
-
-          for (final quizDoc in quizSnapshots.docs) {
-            final quizData = quizDoc.data();
-
-            final quiz = QuizModel(
-              (quizData['questions'] as List<dynamic>? ?? [])
-                  .whereType<Map<String, dynamic>>()
-                  .map((q) => QuestionModel(
-                        q['question'] ?? '',
-                        q['correctOption'] ?? '',
-                        (q['options'] as List<dynamic>? ?? []).cast<String>(),
-                      ))
-                  .toList(),
-            )..id = quizData['id'] ?? quizDoc.id;
-
-            if (quizDoc.id == 'genQuiz') {
-              genQuiz = quiz;
-            } else if (quizDoc.id == 'reviewQuiz') {
-              reviewQuiz = quiz;
-            } else {
-              userQuizzes.add(quiz);
-            }
-          }
-
-          final subtopic = SubtopicModel(
-            subtopicData['topic'] ?? '',
-            subtopicData['subtopicName'] ?? '',
-            subtopicData['description'] ?? '',
-            userQuizzes,
-            genQuiz,
-            reviewQuiz,
-          )..id = subtopicData['id'];
-
-          subtopics.add(subtopic);
-        }
-
-        topic.subtopics = subtopics;
-        topics.add(topic);
-      }
-
-      course.topics = topics;
       courses.add(course);
     }
 
     notifyListeners();
+  }
+
+  Future<List<TopicModel>> fetchTopics(String userId, String courseId) async {
+    final topicSnapshots = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('courses')
+        .doc(courseId)
+        .collection('topics')
+        .get();
+
+    List<TopicModel> fetchedTopics = [];
+
+    for (final topicDoc in topicSnapshots.docs) {
+      final topicData = topicDoc.data();
+      final subtopicSnapshots = await topicDoc.reference.collection('subtopics').get();
+
+      List<SubtopicModel> subtopics = [];
+
+      for (final subDoc in subtopicSnapshots.docs) {
+        final subData = subDoc.data();
+        final genQuiz = await fetchQuizById(
+          userId,
+          courseId,
+          topicData['id'],
+          subData['id'],
+          subData['genQuiz'],
+        );
+        final reviewQuiz = await fetchQuizById(
+          userId,
+          courseId,
+          topicData['id'],
+          subData['id'],
+          subData['reviewQuiz'],
+        );
+
+        subtopics.add(SubtopicModel(
+          topic: subData['topic'],
+          subtopicName: subData['subtopicName'] ?? '',
+          description: subData['description'] ?? '',
+          userQuizzes: subData['userQuizz'] ?? [],
+          genQuiz: genQuiz ?? QuizModel([]),
+          reviewQuiz: reviewQuiz ?? QuizModel([]),
+        )..id = subData['id']);
+      }
+
+      fetchedTopics.add(TopicModel(topicData['topicName'] ?? '', subtopics)..id = topicData['id']);
+    }
+
+    return fetchedTopics;
+  }
+
+  Future<List<QuizModel>> fetchQuizzes(String userId, String courseId, String topicId, String subtopicId) async {
+    final quizList = <QuizModel>[];
+
+    final quizSnapshots = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('courses')
+        .doc(courseId)
+        .collection('topics')
+        .doc(topicId)
+        .collection('subtopics')
+        .doc(subtopicId)
+        .collection('quizzes')
+        .get();
+
+    for (final quizDoc in quizSnapshots.docs) {
+      final quizData = quizDoc.data();
+      final questions = (quizData['questions'] as List).map((q) {
+        return QuestionModel(
+          q['question'] ?? '',
+          q['correctOption'] ?? '',
+          List<String>.from(q['options'] ?? []),
+        );
+      }).toList();
+
+      quizList.add(QuizModel(questions)..id = quizDoc.id);
+    }
+
+    return quizList;
+  }
+
+  Future<SubtopicModel?> fetchSubtopic(String userId, String courseId, String topicId, String subtopicId) async {
+    final subtopicDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('courses')
+        .doc(courseId)
+        .collection('topics')
+        .doc(topicId)
+        .collection('subtopics')
+        .doc(subtopicId)
+        .get();
+
+    if (subtopicDoc.exists) {
+      final data = subtopicDoc.data()!;
+      return SubtopicModel(
+        topic: data['topic'],
+        subtopicName: data['subtopicName'] ?? '',
+        description: data['description'] ?? '',
+        userQuizzes: data['userQuizz'] ?? [],
+        genQuiz: data['genQuiz'],
+        reviewQuiz: data['reveiwQuiz'],
+      )..id = data['id'];
+    }
+    return null;
+  }
+
+  Future<QuizModel?> fetchQuizById(String userId, String courseId, String topicId, String subtopicId, String quizId) async {
+    final quizDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('courses')
+        .doc(courseId)
+        .collection('topics')
+        .doc(topicId)
+        .collection('subtopics')
+        .doc(subtopicId)
+        .collection('quizzes')
+        .doc(quizId)
+        .get();
+
+    if (quizDoc.exists) {
+      final quizData = quizDoc.data()!;
+      final questions = (quizData['questions'] as List).map((q) {
+        return QuestionModel(
+          q['question'] ?? '',
+          q['correctOption'] ?? '',
+          List<String>.from(q['options'] ?? []),
+        );
+      }).toList();
+
+      return QuizModel(questions)..id = quizDoc.id;
+    }
+
+    return null;
   }
 
   _processCourseMaterial(userId, subject, courseName, mergedCourseMaterialLink) async {
