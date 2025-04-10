@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../utils/feedback_dialog.dart';
 
-class QuizView extends StatefulWidget{
+class QuizView extends StatefulWidget {
   const QuizView({super.key});
 
   @override
@@ -8,15 +9,19 @@ class QuizView extends StatefulWidget{
 }
 
 class _QuizViewState extends State<QuizView> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.feedback_outlined),
+            onPressed: () => showFeedbackDialog(context),
+          ),
+        ],
       ),
-      body:
-      Align(
+      body: Align(
         alignment: Alignment.center,
         child: Wrap(
           alignment: WrapAlignment.spaceAround,
@@ -50,10 +55,7 @@ class _QuizViewState extends State<QuizView> {
                     alignment: MainAxisAlignment.end,
                     spacing: 8.0,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('View'),
-                      ),
+                      ElevatedButton(onPressed: () {}, child: Text('View')),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/quiz');
@@ -61,7 +63,7 @@ class _QuizViewState extends State<QuizView> {
                         child: Text('Start'),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -91,16 +93,10 @@ class _QuizViewState extends State<QuizView> {
                     alignment: MainAxisAlignment.end,
                     spacing: 8.0,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('View'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Start'),
-                      ),
+                      ElevatedButton(onPressed: () {}, child: Text('View')),
+                      ElevatedButton(onPressed: () {}, child: Text('Start')),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -130,16 +126,10 @@ class _QuizViewState extends State<QuizView> {
                     alignment: MainAxisAlignment.end,
                     spacing: 8.0,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('View'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Start'),
-                      ),
+                      ElevatedButton(onPressed: () {}, child: Text('View')),
+                      ElevatedButton(onPressed: () {}, child: Text('Start')),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
