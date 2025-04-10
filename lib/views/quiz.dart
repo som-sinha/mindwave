@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../utils/feedback_dialog.dart';
 
-class Quiz extends StatefulWidget{
+class Quiz extends StatefulWidget {
   const Quiz({super.key});
 
   @override
@@ -13,6 +14,12 @@ class _QuizState extends State<Quiz> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.feedback_outlined),
+            onPressed: () => showFeedbackDialog(context),
+          ),
+        ],
       ),
       body: Align(
         alignment: Alignment.center,
@@ -51,71 +58,79 @@ class _QuizState extends State<Quiz> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(370, 62),
-                    backgroundColor: Color(int.parse('#dc93ec'.replaceAll('#', '0xff'))),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7.0), // Adjust this value
+                    backgroundColor: Color(
+                      int.parse('#dc93ec'.replaceAll('#', '0xff')),
                     ),
-                      alignment: Alignment.centerLeft
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                   child: Text(
                     'Option 1',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      fixedSize: Size(370, 62),
-                      backgroundColor: Color(int.parse('#dc93ec'.replaceAll('#', '0xff'))),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0), // Adjust this value
-                      ),
-                      alignment: Alignment.centerLeft
+                    fixedSize: Size(370, 62),
+                    backgroundColor: Color(
+                      int.parse('#dc93ec'.replaceAll('#', '0xff')),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                   child: Text(
                     'Option 2',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      fixedSize: Size(370, 62),
-                      backgroundColor: Color(int.parse('#dc93ec'.replaceAll('#', '0xff'))),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0), // Adjust this value
-                      ),
-                      alignment: Alignment.centerLeft
+                    fixedSize: Size(370, 62),
+                    backgroundColor: Color(
+                      int.parse('#dc93ec'.replaceAll('#', '0xff')),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                   child: Text(
                     'Option 3',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      fixedSize: Size(370, 62),
-                      backgroundColor: Color(int.parse('#dc93ec'.replaceAll('#', '0xff'))),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0), // Adjust this value
-                      ),
-                      alignment: Alignment.centerLeft
+                    fixedSize: Size(370, 62),
+                    backgroundColor: Color(
+                      int.parse('#dc93ec'.replaceAll('#', '0xff')),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                   child: Text(
                     'Option 4',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
-              ]
+              ],
             ),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }
