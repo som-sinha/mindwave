@@ -16,6 +16,13 @@ class _QuizViewState extends State<QuizView> {
         title: Text('Quiz page'),
         actions: [
           IconButton(
+            icon: Icon(Icons.workspace_premium_outlined),
+            tooltip: 'Upgrade to Pro',
+            onPressed: () {
+              Navigator.pushNamed(context, '/upgrade');
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.feedback_outlined),
             onPressed: () => showFeedbackDialog(context),
           ),
