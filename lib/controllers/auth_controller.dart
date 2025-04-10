@@ -13,14 +13,15 @@ class AuthController extends ChangeNotifier {
         password: passwordController.text,
       );
       Navigator.pushNamed(context, '/home');
-      
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Sign In error')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message ?? 'Sign-In error')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An unexpected error occurred during Sign In')),
+        const SnackBar(
+          content: Text('An unexpected error occurred during Sign-In'),
+        ),
       );
     }
   }
@@ -42,7 +43,9 @@ class AuthController extends ChangeNotifier {
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Error sending password reset email')),
+        SnackBar(
+          content: Text(e.message ?? 'Error sending password reset email'),
+        ),
       );
     }
   }
@@ -52,10 +55,11 @@ class AuthController extends ChangeNotifier {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken, // Required by Firebase Auth
+        idToken: googleAuth.idToken,
         accessToken: googleAuth.accessToken, // Optional
       );
 
@@ -66,7 +70,9 @@ class AuthController extends ChangeNotifier {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An unexpected error occurred during Google Sign-In')),
+        const SnackBar(
+          content: Text('An unexpected error occurred during Google Sign-In'),
+        ),
       );
     }
   }
