@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'View/quiz-view.dart';
 import 'View/quiz.dart';
+import 'View/upgrade_pro.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => QuizView(),
         '/quiz': (context) => Quiz(),
+        '/upgrade': (context) => UpgradeProPage(),
       },
     );
   }
 }
-
