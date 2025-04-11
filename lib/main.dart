@@ -14,6 +14,8 @@ import 'firebase_options.dart';
 import 'controllers/app_controller.dart';
 import 'views/course_list_view.dart';
 
+import 'views/review_view.dart';
+
 void main() async {
   // initialise firebase
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +57,14 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignupView(),
         '/home': (context) => CourseListView(),
         '/feedback': (context) => FeedbackView(),
+        '/review': (context) {
+          final args =
+              ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          return ReviewView(
+            subtopicName: args['subtopicName']!,
+            summary: args['summary']!,
+          );
+        },
       },
     );
   }
