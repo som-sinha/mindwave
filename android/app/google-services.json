@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "272950065400",
+    "project_id": "mindwave-5f797",
+    "storage_bucket": "mindwave-5f797.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272950065400:android:f35c23e2fb001dea26e30d",
+        "android_client_info": {
+          "package_name": "com.example.mindwave"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272950065400-jp06qo4o4thunhpebrni6n1mp873bj7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mindwave",
+            "certificate_hash": "4352c6bd5cfd4a8bd9fa093a7862708c84966ed8"
+          }
+        },
+        {
+          "client_id": "272950065400-6q7qi93gpji1o9a7sslna57k3klom14h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVgul-hd-I1cjVj5siyLdi_6vnft_W-FU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272950065400-6q7qi93gpji1o9a7sslna57k3klom14h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "272950065400-gtadnurvqubqg2ba4780vikkv03grqss.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mindwave"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
