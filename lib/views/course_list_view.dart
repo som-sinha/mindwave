@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/app_controller.dart';
+import '../models/course_model.dart';
+import 'topic_list_view.dart';
 
 class CourseListView extends StatelessWidget {
   const CourseListView({super.key});
@@ -49,65 +51,50 @@ class CourseListView extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: ctrl.courses.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(title: Text(ctrl.courses[index].courseName));
-                },
-              ),
-            ),
-            // 👇 Review Card
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/review',
-                  arguments: {
-                    'subtopicName': 'Photosynthesis',
-                    'summary':
-                        'Photosynthesis is the process by which green plants use sunlight to synthesize food from carbon dioxide and water. It produces oxygen as a byproduct and is essential for life on Earth.',
-                  },
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 100),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFFEAD8F5), // Light purple
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.black12),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: ctrl.courses.length,
+        itemBuilder: (BuildContext context, int index) {
+          CourseModel course = ctrl.courses[index];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TopicListView(course: course),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Review',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Use the power of AI to get a head start on the topic before getting quizzed!',
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
-                    ),
-                  ],
+              );
+            },
+            child: Card(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              color: Colors.purple.shade50,
+              child: ListTile(
+                leading: CircleAvatar(
+                  child: Text(course.courseName[0]),
+                  backgroundColor: Colors.purple.shade100,
+                ),
+                title: Text(course.courseName),
+                subtitle: Text(course.subject),
+                trailing: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: course.courseImage,
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Open add a course page
+          // Open add course page
         },
         child: const Icon(Icons.add),
       ),

@@ -7,25 +7,35 @@ class AppController extends ChangeNotifier {
   List<CourseModel> courses = [];
 
   addCourse(subject, courseName, courseMaterial) {
+    var (courseDescription, topics) = _processCourseMaterial(
+      subject,
+      courseName,
+      courseMaterial,
+    );
 
-    var (courseDescription, topics) = _processCourseMaterial(subject, courseName, courseMaterial);
+    Image courseImage = Image.network(
+      "https://dummyimage.com/600x400/000/fff.png",
+    );
 
-    Image courseImage = Image.network("https://dummyimage.com/600x400/000/fff.png");
-
-    CourseModel course = CourseModel(subject, courseName, courseImage, courseMaterial, courseDescription, topics);
-
-    
+    CourseModel course = CourseModel(
+      subject,
+      courseName,
+      courseImage,
+      courseMaterial,
+      courseDescription,
+      topics,
+    );
   }
 
-  removeCourse() {
+  removeCourse() {}
 
-  }
+  getCourses() {}
 
-  getCourses() {
-
-  }
-
-  (String, List<TopicModel>) _processCourseMaterial(subject, courseName,  courseMaterial) {
+  (String, List<TopicModel>) _processCourseMaterial(
+    subject,
+    courseName,
+    courseMaterial,
+  ) {
     return ('', []);
   }
 }
