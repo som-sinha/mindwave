@@ -44,7 +44,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
+      initialRoute: '/quiz-view',
       routes: {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginView(),
