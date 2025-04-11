@@ -5,6 +5,7 @@ import 'package:mindwave/views/feedback_view.dart';
 import 'package:mindwave/views/login_view.dart';
 import 'package:mindwave/views/signup_view.dart';
 import 'package:mindwave/views/splash_screen.dart';
+import 'package:mindwave/views/question_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,13 +51,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
+      initialRoute: '/quiz-view',
       routes: {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginView(),
         '/signup': (context) => SignupView(),
         '/home': (context) => CourseListView(),
         '/feedback': (context) => FeedbackView(),
+        '/quiz-view':(context) => Quiz()
       }
     );
   }
