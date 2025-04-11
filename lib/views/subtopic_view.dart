@@ -9,9 +9,11 @@ class SubtopicView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8EDF8),
       appBar: AppBar(
+        backgroundColor: Colors.purple.shade100,
         title: Text(subtopic.subtopicName),
-        leading: BackButton(),
+        leading: const BackButton(),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12.0),
@@ -25,10 +27,10 @@ class SubtopicView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Banner / Header
+          // Banner header
           Container(
-            width: double.infinity,
             height: 160,
+            width: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -39,15 +41,15 @@ class SubtopicView extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.85),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                subtopic.subtopicName,
+                'Subtopic Title',
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -56,12 +58,12 @@ class SubtopicView extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // Quiz Button
+          // Quiz Card
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GestureDetector(
               onTap: () {
-                // TODO: Navigate to quiz view
+                // TODO: Navigate to quiz screen
               },
               child: Container(
                 padding: const EdgeInsets.all(16),
@@ -78,12 +80,13 @@ class SubtopicView extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       'Go through our suggested questions or make your own! We keep track of where you went wrong so you can review later.',
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 14, color: Colors.black87),
                     ),
                   ],
                 ),
@@ -93,9 +96,9 @@ class SubtopicView extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Review Button
+          // Review Card
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -104,7 +107,7 @@ class SubtopicView extends StatelessWidget {
                   arguments: {
                     'subtopicName': subtopic.subtopicName,
                     'summary':
-                        'This is a placeholder summary for ${subtopic.subtopicName}. You can generate this dynamically using AI or content stored in the subtopic later.',
+                        'This is a placeholder summary for ${subtopic.subtopicName}. You can generate this dynamically using Gemini or content later.',
                   },
                 );
               },
@@ -123,12 +126,13 @@ class SubtopicView extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       'Use the power of AI to get a head start on the topic before getting quizzed!',
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 14, color: Colors.black87),
                     ),
                   ],
                 ),
