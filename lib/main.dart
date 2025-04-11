@@ -31,6 +31,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppController()),
         ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (context) => QuizController()..initializeQuizzes(),)
       ],
       child: const MainApp(),
     ),
