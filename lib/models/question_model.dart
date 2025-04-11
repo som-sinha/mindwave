@@ -16,13 +16,4 @@ class QuestionModel {
       'correctOption': correctOption
     };
   }
-  
-  factory QuestionModel.fromFirestore(Map<String, dynamic> data) {
-    return QuestionModel(
-      data['question'] ?? '',
-      data['correctOption'] ?? '',
-      (data['options'] as List<dynamic>).cast<String>(),
-    )..id = data['id'] ?? Uuid().v4();
-  }
-
 }

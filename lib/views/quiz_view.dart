@@ -3,14 +3,13 @@ import 'package:provider/provider.dart';
 import '../controllers/quiz_controller.dart';
 import '../utils/feedback_dialog.dart';
 import '../models/quiz_model.dart';
+import '../models/question_model.dart';
 
 class QuizView extends StatelessWidget {
   const QuizView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<QuizController>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quiz page'),
@@ -18,7 +17,7 @@ class QuizView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.workspace_premium_outlined),
             tooltip: 'Upgrade to Pro',
-            onPressed: () => controller.navigateToQuiz(context, 'upgrade'),
+            onPressed: () => Navigator.pushNamed(context, '/upgrade'),
           ),
           IconButton(
             icon: const Icon(Icons.feedback_outlined),
@@ -28,6 +27,10 @@ class QuizView extends StatelessWidget {
       ),
       body: Consumer<QuizController>(
         builder: (context, controller, child) {
+          if (controller.quizzes.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           return Align(
             alignment: Alignment.center,
             child: Wrap(
@@ -51,11 +54,10 @@ class QuizView extends StatelessWidget {
     final description = _getQuizDescription(context, quiz);
     final color = _getQuizColor(context, quiz);
 
-    // Wrap your existing Container with Dismissible
     return Dismissible(
-      key: Key(quiz.id), // Unique key for each quiz
-      direction: DismissDirection.endToStart, // Only allow swipe from right to left
-      background: _buildDeleteBackground(), // Red background when swiping
+      key: Key(quiz.id),
+      direction: DismissDirection.endToStart,
+      background: _buildDeleteBackground(),
       confirmDismiss: (direction) => _showDeleteConfirmation(context),
       onDismissed: (direction) => _handleQuizDeletion(context, quiz),
       child: Container(
@@ -85,15 +87,15 @@ class QuizView extends StatelessWidget {
               alignment: MainAxisAlignment.end,
               spacing: 8.0,
               children: [
-                // Added delete icon button
                 IconButton(
                   icon: const Icon(Icons.delete),
                   color: Colors.white,
-                  onPressed: () => _showDeleteConfirmation(context).then((confirmed) {
-                    if (confirmed ?? false) {
+                  onPressed: () async {
+                    final confirmed = await _showDeleteConfirmation(context);
+                    if (confirmed == true) {
                       _handleQuizDeletion(context, quiz);
                     }
-                  }),
+                  },
                 ),
                 ElevatedButton(
                     onPressed: () {},
@@ -114,9 +116,9 @@ class QuizView extends StatelessWidget {
 
   String _getQuizTitle(BuildContext context, QuizModel quiz) {
     final controller = Provider.of<QuizController>(context, listen: false);
-    if (controller.isGeneratedQuiz(quiz)) {
+    if (quiz == controller.generatedQuiz) {
       return 'Generated Quiz';
-    } else if (controller.isRevisionQuiz(quiz)) {
+    } else if (quiz == controller.revisionQuiz) {
       return 'Revision Quiz';
     } else {
       return 'Quiz ${controller.quizzes.indexOf(quiz) + 1}';
@@ -125,9 +127,9 @@ class QuizView extends StatelessWidget {
 
   String _getQuizDescription(BuildContext context, QuizModel quiz) {
     final controller = Provider.of<QuizController>(context, listen: false);
-    if (controller.isGeneratedQuiz(quiz)) {
+    if (quiz == controller.generatedQuiz) {
       return 'AI-generated questions for optimal revision';
-    } else if (controller.isRevisionQuiz(quiz)) {
+    } else if (quiz == controller.revisionQuiz) {
       return 'Questions you got wrong or flagged for review';
     } else {
       return 'Custom Quiz created by user';
@@ -136,12 +138,11 @@ class QuizView extends StatelessWidget {
 
   Color _getQuizColor(BuildContext context, QuizModel quiz) {
     final controller = Provider.of<QuizController>(context, listen: false);
-    return controller.isGeneratedQuiz(quiz)
+    return quiz == controller.generatedQuiz
         ? Colors.purpleAccent[400]!
         : Colors.purpleAccent;
   }
 
-  // Helper widget for swipe-to-delete background
   Widget _buildDeleteBackground() {
     return Container(
       decoration: BoxDecoration(
@@ -158,7 +159,6 @@ class QuizView extends StatelessWidget {
     );
   }
 
-// Shows confirmation dialog
   Future<bool?> _showDeleteConfirmation(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -182,47 +182,65 @@ class QuizView extends StatelessWidget {
     );
   }
 
-// Handles the actual deletion
-  void _handleQuizDeletion(BuildContext context, QuizModel quiz) {
+  Future<void> _handleQuizDeletion(BuildContext context, QuizModel quiz) async {
     final controller = Provider.of<QuizController>(context, listen: false);
-    controller.deleteQuiz(quiz.id);
-
-    // Show undo snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Deleted quiz'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            // You'll need to add a restoreQuiz method to your controller
-            controller.addQuiz(quiz);
-          },
+    try {
+      await controller.deleteQuiz(quiz.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Quiz deleted'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () async {
+              await controller.addQuizFromModel(quiz);
+            },
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete quiz: ${e.toString()}')),
+      );
+    }
   }
 
-  void _showAddQuizDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showAddQuizDialog(BuildContext context) async {
+    final controller = Provider.of<QuizController>(context, listen: false);
+
+    final result = await showDialog<QuizModel>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add New Quiz'),
-        content: const Text('This will create a new empty quiz'),
+        content: const Text('Enter a title for your new quiz'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              Provider.of<QuizController>(context, listen: false)
-                  .addCustomQuiz([]);
-              Navigator.pop(context);
+            onPressed: () async {
+              // Create with at least one default question
+              final defaultQuestion = QuestionModel(
+                  "New Question",
+                  "A",
+                  {"A": "Option A", "B": "Option B"}
+              );
+
+              final newQuiz = await controller.addQuiz([defaultQuestion]);
+              Navigator.pop(context, newQuiz);
             },
             child: const Text('Create'),
           ),
         ],
       ),
     );
+
+    if (result != null) {
+      Navigator.pushNamed(
+        context,
+        '/edit-quiz',
+        arguments: result.id,
+      );
+    }
   }
 }
