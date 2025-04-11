@@ -33,59 +33,81 @@ class CourseListView extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
+      body: Container(
+        color: Color(0xFFF8EDF8), // Soft purple background
         padding: const EdgeInsets.all(12),
-        itemCount: ctrl.courses.length,
-        itemBuilder: (BuildContext context, int index) {
-          final course = ctrl.courses[index];
+        child: ListView.builder(
+          itemCount: ctrl.courses.length,
+          itemBuilder: (BuildContext context, int index) {
+            CourseModel course = ctrl.courses[index];
 
-          return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.purple.shade100,
-                child: Text(
-                  course.courseName[0],
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              title: Text(course.courseName),
-              subtitle: Text(course.subject),
-              trailing: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: SizedBox(
-                  width: 55,
-                  height: 55,
-                  child: course.courseImage,
-                ),
-              ),
+            return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => TopicListView(course: course),
+                    builder: (context) => TopicListView(course: course),
                   ),
                 );
               },
-            ),
-          );
-        },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.purple.shade100,
+                      child: Text(course.courseName[0]),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            course.courseName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            course.subject,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: course.courseImage,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple.shade100,
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.purple.shade200,
         onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
