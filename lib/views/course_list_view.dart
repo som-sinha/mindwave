@@ -13,41 +13,23 @@ class CourseListView extends StatelessWidget {
     final ctrl = context.watch<AppController>();
 
     return Scaffold(
+      backgroundColor: Color(0xFFFBEFFF), // light pastel background
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: const Text('Your Subjects'),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const CircleAvatar(
+        title: const Text(
+          'Your Subjects',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 12),
+            child: CircleAvatar(
               backgroundImage: NetworkImage(
                 'https://dummyimage.com/600x400/000/fff.png',
               ),
             ),
-            itemBuilder:
-                (BuildContext context) => [
-                  const PopupMenuItem<String>(
-                    value: 'profile',
-                    child: Text('Profile'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Provide Feedback',
-                    child: Text('Provide Feedback'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'logout',
-                    child: Text('Logout'),
-                  ),
-                ],
-            onSelected: (value) async {
-              if (value == 'logout') {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pop();
-              }
-              if (value == 'Provide Feedback') {
-                Navigator.pushNamed(context, '/feedback');
-              }
-            },
           ),
         ],
       ),
@@ -55,48 +37,55 @@ class CourseListView extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         itemCount: ctrl.courses.length,
         itemBuilder: (BuildContext context, int index) {
-          CourseModel course = ctrl.courses[index];
+          final course = ctrl.courses[index];
 
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TopicListView(course: course),
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: Offset(0, 3),
                 ),
-              );
-            },
-            child: Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(
+              ],
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.purple.shade100,
+                child: Text(
+                  course.courseName[0],
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              title: Text(course.courseName),
+              subtitle: Text(course.subject),
+              trailing: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-              ),
-              color: Colors.purple.shade50,
-              child: ListTile(
-                leading: CircleAvatar(
-                  child: Text(course.courseName[0]),
-                  backgroundColor: Colors.purple.shade100,
+                child: SizedBox(
+                  width: 55,
+                  height: 55,
+                  child: course.courseImage,
                 ),
-                title: Text(course.courseName),
-                subtitle: Text(course.subject),
-                trailing: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: course.courseImage,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TopicListView(course: course),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Open add course page
-        },
+        backgroundColor: Colors.purple.shade100,
         child: const Icon(Icons.add),
+        onPressed: () {},
       ),
     );
   }
