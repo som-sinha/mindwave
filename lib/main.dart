@@ -20,18 +20,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // Set up for local firebase emulator
-  if (kDebugMode) {
-   try {
-     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-   } catch (e) {
-     // ignore: avoid_print
-     print(e);
-   }
-  }
-
+  
   // Run app with controllers as notifier to change views
   runApp(
     MultiProvider(
