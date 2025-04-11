@@ -5,7 +5,8 @@ import 'package:mindwave/views/feedback_view.dart';
 import 'package:mindwave/views/login_view.dart';
 import 'package:mindwave/views/signup_view.dart';
 import 'package:mindwave/views/splash_screen.dart';
-import 'package:mindwave/views/question_view.dart';
+import 'package:mindwave/views/quiz_view.dart';
+import 'package:mindwave/controllers/quiz_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,6 +40,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppController()),
         ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (context) => QuizController()..initializeQuizzes(),)
       ],
       child: const MainApp(),
     ),
@@ -58,7 +60,7 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignupView(),
         '/home': (context) => CourseListView(),
         '/feedback': (context) => FeedbackView(),
-        '/quiz-view':(context) => Quiz()
+        '/quiz-view':(context) => QuizView()
       }
     );
   }
