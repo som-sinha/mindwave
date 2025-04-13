@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindwave/controllers/auth_controller.dart';
 import 'package:mindwave/views/feedback_view.dart';
@@ -6,9 +5,7 @@ import 'package:mindwave/views/login_view.dart';
 import 'package:mindwave/views/signup_view.dart';
 import 'package:mindwave/views/splash_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
 import 'controllers/app_controller.dart';

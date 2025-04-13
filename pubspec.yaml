@@ -18,6 +18,8 @@ dependencies:
   image_cropper:
   image_picker:
   google_sign_in:
+  cloud_functions: ^5.4.0
+  pdf_combiner: ^4.3.0
 
 dev_dependencies:
   flutter_test:
