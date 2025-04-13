@@ -116,3 +116,15 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+node_modules
+.genkit/datasets/index.json
+.genkit/evals/index.txt
+.genkit/servers/tools-1275.json
+.genkit/traces/2f2d6e31abd5936292d6bc2c2aaeea27
+.genkit/traces/9b27c1cc3e45a7f37c697bb281493786
+.genkit/traces/9cb3076bad4e960cf0d0c5825770dc15
+.genkit/traces/0597539e53cef38a74a6244554049ae6
+.genkit/traces/a081d7f384fa323c596634fa91d06098
+.genkit/traces/da12be3ee9540c7c41b4b8e56a91f784
+.genkit/traces/e7c69d675673fdf7ae1c4e3fe91f1822
+functions/.genkit/servers/tools-73833.json
