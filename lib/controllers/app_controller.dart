@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import '../models/course_model.dart';
 import '../models/topic_model.dart';
 import '../models/subtopic_model.dart';
@@ -106,11 +108,9 @@ class AppController extends ChangeNotifier {
 
   getCourses() {}
 
-  (String, List<TopicModel>) _processCourseMaterial(
-    subject,
-    courseName,
-    courseMaterial,
-  ) {
+  (String, List<TopicModel>) _processCourseMaterial(subject, courseName, courseMaterial,) async {
+    final requestUrl = Uri.parse('');
+    
     return ('', []);
   }
 }

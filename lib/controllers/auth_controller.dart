@@ -76,4 +76,7 @@ class AuthController extends ChangeNotifier {
       );
     }
   }
+
+  Future<void> signOut(BuildContext context) async {
+  }
 }

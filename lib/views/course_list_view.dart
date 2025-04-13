@@ -13,9 +13,7 @@ class CourseListView extends StatelessWidget {
     final ctrl = context.watch<AppController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8EDF8), // Soft purple background
       appBar: AppBar(
-        backgroundColor: Colors.purple.shade100,
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: const Text(
@@ -75,20 +73,11 @@ class CourseListView extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ],
               ),
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Colors.purple.shade100,
                     child: Text(course.courseName[0]),
                   ),
                   const SizedBox(width: 12),
@@ -125,7 +114,6 @@ class CourseListView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple.shade200,
         onPressed: () {
           // TODO: Add course logic
         },
