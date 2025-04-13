@@ -28,34 +28,18 @@
         "lib/firebase_options.dart": {
           "projectId": "mindwave-5f797",
           "configurations": {
-            "android": "1:272950065400:android:f35c23e2fb001dea26e30d",
-            "ios": "1:272950065400:ios:0fcf7cecf729dd9826e30d",
-            "macos": "1:272950065400:ios:0fcf7cecf729dd9826e30d",
-            "web": "1:272950065400:web:bfe6b149c14be27426e30d",
-            "windows": "1:272950065400:web:c526b44d20e5ca4d26e30d"
+            "android": "1:272950065400:android:f35c23e2fb001dea26e30d"
           }
         }
       }
     }
   },
-  "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "storage": {
-      "port": 9199
-    },
-    "ui": {
-      "enabled": true
-    },
-    "singleProjectMode": true
-  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   },
   "functions": [
     {
@@ -66,8 +50,5 @@
         "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
-  ],
-  "storage": {
-    "rules": "storage.rules"
-  }
+  ]
 }
