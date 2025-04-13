@@ -16,4 +16,24 @@ class QuestionModel {
       'correctOption': correctOption
     };
   }
+
+  factory QuestionModel.fromFirestore(Map<String, dynamic> data) {
+    return QuestionModel(
+      data['question'] as String,
+      data['correctOption'] as String,
+      Map<String, String>.from(data['options'] as Map),
+    );
+  }
+
+  QuestionModel copyWith({
+    String? question,
+    Map<String, String>? options,
+    String? correctOption,
+  }) {
+    return QuestionModel(
+      question ?? this.question,
+      correctOption ?? this.correctOption,
+      options ?? this.options,
+    );
+  }
 }

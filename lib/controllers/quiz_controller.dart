@@ -1,29 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/quiz_model.dart';
 import '../models/question_model.dart';
 
 class QuizController with ChangeNotifier {
-  final List<QuizModel> _quizzes = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference _quizzesCollection = FirebaseFirestore.instance.collection('quizzes');
 
+  List<QuizModel> _quizzes = [];
   List<QuizModel> get quizzes => List.unmodifiable(_quizzes);
 
-  // Add methods to access specific quizzes
-  QuizModel get generatedQuiz => _quizzes[0];
-  QuizModel get revisionQuiz => _quizzes[1];
-  bool isGeneratedQuiz(QuizModel quiz) => quiz == _quizzes[0];
-  bool isRevisionQuiz(QuizModel quiz) => quiz == _quizzes[1];
+  // Initialize quizzes from Firestore
+  Future<void> initializeQuizzes() async {
+    try {
+      final snapshot = await _quizzesCollection.get();
+      if (snapshot.docs.isEmpty) {
+        // If no quizzes exist, create sample quizzes
+        await _createSampleQuizzes();
+      } else {
+        // Load quizzes from Firestore
+        _quizzes = snapshot.docs.map((doc) {
+          return QuizModel.fromFirestore(doc.data() as Map<String, dynamic>);
+        }).toList();
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error initializing quizzes: $e');
+      // Fallback to local samples if Firestore fails
+      _quizzes.addAll([
+        _createGeneratedQuiz(),
+        _createRevisionQuiz(),
+        _createCustomQuiz(),
+      ]);
+      notifyListeners();
+    }
+  }
 
-
-  // Create predefined quiz types
-  void initializeQuizzes() {
+  Future<void> _createSampleQuizzes() async {
     _quizzes.addAll([
       _createGeneratedQuiz(),
       _createRevisionQuiz(),
       _createCustomQuiz(),
     ]);
-    notifyListeners();
+    // Save samples to Firestore
+    final batch = _firestore.batch();
+    for (final quiz in _quizzes) {
+      batch.set(_quizzesCollection.doc(quiz.id), quiz.toFirestore());
+    }
+    await batch.commit();
   }
 
+  // Quiz creation methods
   QuizModel _createGeneratedQuiz() {
     return QuizModel([
       QuestionModel(
@@ -54,52 +81,75 @@ class QuizController with ChangeNotifier {
     ]);
   }
 
-  // Add a new custom quiz
-  void addCustomQuiz(List<QuestionModel> questions) {
-    _quizzes.add(QuizModel(questions));
-    notifyListeners();
+  QuizModel? get generatedQuiz => _quizzes.isNotEmpty ? _quizzes.firstWhere(
+        (quiz) => quiz.id == 'generated_quiz_id', // Add a way to identify generated quizzes
+    orElse: () => _createGeneratedQuiz(),
+  ) : null;
+
+  QuizModel? get revisionQuiz => _quizzes.isNotEmpty ? _quizzes.firstWhere(
+        (quiz) => quiz.id == 'revision_quiz_id', // Add a way to identify revision quizzes
+    orElse: () => _createRevisionQuiz(),
+  ) : null;
+
+  // Add a new quiz to Firestore
+  Future<QuizModel> addQuiz(List<QuestionModel> questions) {
+    return addQuizFromModel(QuizModel(questions));
   }
 
-  // Add a new empty quiz
-  QuizModel addEmptyQuiz() {
-    final newQuiz = QuizModel([]);
-    _quizzes.add(newQuiz);
-    notifyListeners();
-    return newQuiz;
-  }
-
-  // Add a quiz with predefined questions
-  QuizModel addQuizWithQuestions(List<QuestionModel> questions) {
-    final newQuiz = QuizModel(questions);
-    _quizzes.add(newQuiz);
-    notifyListeners();
-    return newQuiz;
-  }
-
-  // Add an existing quiz (for undo functionality)
-  void addQuiz(QuizModel quiz) {
-    _quizzes.add(quiz);
-    notifyListeners();
-  }
-
-  /// Deletes a quiz by its ID
-  void deleteQuiz(String quizId) {
-    _quizzes.removeWhere((quiz) => quiz.id == quizId);
-    notifyListeners();
-
-    // Add Firestore deletion here if using database
-    // await FirebaseFirestore.instance.collection('quizzes').doc(quizId).delete();
-  }
-
-  /// Deletes a quiz by its index (alternative approach)
-  void deleteQuizAtIndex(int index) {
-    if (index >= 0 && index < _quizzes.length) {
-      _quizzes.removeAt(index);
-      notifyListeners();
+  Future<QuizModel> addQuizFromModel(QuizModel quiz) async {
+    try {
+      await _quizzesCollection.doc(quiz.id).set(quiz.toFirestore());
+      await _refreshQuizzes();
+      return quiz;
+    } catch (e) {
+      debugPrint('Error adding quiz: $e');
+      throw Exception('Failed to add quiz');
     }
   }
 
-  // Navigate to quiz
+  // Delete a quiz from Firestore
+  Future<void> deleteQuiz(String quizId) async {
+    try {
+      await _quizzesCollection.doc(quizId).delete();
+      await _refreshQuizzes(); // Reload from Firestore
+    } catch (e) {
+      debugPrint('Error deleting quiz: $e');
+      throw Exception('Failed to delete quiz');
+    }
+  }
+
+  // Add question to an existing quiz in Firestore
+  Future<void> addQuestion(String quizId, QuestionModel question) async {
+    try {
+      await _quizzesCollection.doc(quizId).update({
+        'questions': FieldValue.arrayUnion([question.toFirestore()])
+      });
+      await _refreshQuizzes(); // Reload from Firestore
+    } catch (e) {
+      debugPrint('Error adding question: $e');
+      throw Exception('Failed to add question');
+    }
+  }
+
+  // Get real-time updates stream
+  Stream<List<QuizModel>> get quizzesStream {
+    return _quizzesCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return QuizModel.fromFirestore(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
+
+  // Refresh quizzes from Firestore
+  Future<void> _refreshQuizzes() async {
+    final snapshot = await _quizzesCollection.get();
+    _quizzes = snapshot.docs.map((doc) {
+      return QuizModel.fromFirestore(doc.data() as Map<String, dynamic>);
+    }).toList();
+    notifyListeners();
+  }
+
+  // Navigation method
   void navigateToQuiz(BuildContext context, String quizId) {
     Navigator.pushNamed(context, '/quiz', arguments: quizId);
   }

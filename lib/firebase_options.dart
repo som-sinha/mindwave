@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '272950065400',
     projectId: 'mindwave-5f797',
     storageBucket: 'mindwave-5f797.firebasestorage.app',
+    androidClientId: '272950065400-jp06qo4o4thunhpebrni6n1mp873bj7g.apps.googleusercontent.com',
+    iosClientId: '272950065400-gtadnurvqubqg2ba4780vikkv03grqss.apps.googleusercontent.com',
     iosBundleId: 'com.example.mindwave',
   );
 
@@ -72,6 +74,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '272950065400',
     projectId: 'mindwave-5f797',
     storageBucket: 'mindwave-5f797.firebasestorage.app',
+    androidClientId: '272950065400-jp06qo4o4thunhpebrni6n1mp873bj7g.apps.googleusercontent.com',
+    iosClientId: '272950065400-gtadnurvqubqg2ba4780vikkv03grqss.apps.googleusercontent.com',
     iosBundleId: 'com.example.mindwave',
   );
 
