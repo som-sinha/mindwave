@@ -5,16 +5,24 @@ import 'package:mindwave/controllers/app_controller.dart';
 import 'package:mindwave/controllers/auth_controller.dart';
 import 'package:provider/provider.dart';
 
-class AddCourseView extends StatelessWidget {
+class AddCourseView extends StatefulWidget {
   const AddCourseView({super.key});
 
   @override
+  State<AddCourseView> createState() => _AddCourseViewState();
+}
+
+class _AddCourseViewState extends State<AddCourseView> {
+  final TextEditingController courseNameController = TextEditingController();
+  final TextEditingController subjectController = TextEditingController();
+  List<File> _courseMaterial = [];
+  bool _isLoading = false;
+  bool _filesPicked = false;
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController courseNameController = TextEditingController();
-    final TextEditingController subjectController = TextEditingController();
     final appCtrl = context.watch<AppController>();
     final authCtrl = context.watch<AuthController>();
-    List<File> courseMaterial = [];
 
     return Scaffold(
       appBar: AppBar(title: const Text('Add Course')),
@@ -40,19 +48,39 @@ class AddCourseView extends StatelessWidget {
                 );
 
                 if (result != null) {
-                  courseMaterial = result.paths.map((path) => File(path!)).toList();
+                  setState(() {
+                    _courseMaterial = result.paths.map((path) => File(path!)).toList();
+                    _filesPicked = true;
+                  });
                 }
               },
               child: const Text('Upload Course Material (PDF)'),
             ),
+            if (_filesPicked)
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text('✅ Files uploaded successfully!'),
+              ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                var userId = authCtrl.currentUser!.uid;
-                appCtrl.addCourse(userId, subjectController.text, courseNameController.text, courseMaterial);
-              },
-              child: const Text('Submit'),
-            ),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () async {
+                      setState(() => _isLoading = true);
+                      final userId = authCtrl.currentUser!.uid;
+                      await appCtrl.addCourse(
+                        userId,
+                        subjectController.text,
+                        courseNameController.text,
+                        _courseMaterial,
+                      );
+                      setState(() => _isLoading = false);
+                      if (context.mounted) {
+                        Navigator.pushNamed(context, '/home');
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
           ],
         ),
       ),
