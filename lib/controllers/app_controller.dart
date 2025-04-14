@@ -62,6 +62,8 @@ class AppController extends ChangeNotifier {
     }
     course.topics = topics;
     await _uploadToFirestore(userId, course);
+
+    courses.add(course);
   }
 
   removeCourse() {
