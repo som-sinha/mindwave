@@ -1,4 +1,3 @@
-import 'course_model.dart';
 import 'subtopic_model.dart';
 import 'package:uuid/uuid.dart';
 

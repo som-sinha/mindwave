@@ -41,30 +41,14 @@ class _SubtopicViewState extends State<SubtopicView> {
       ),
       body: Column(
         children: [
-          // Banner header
-          Container(
-            height: 160,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://dummyimage.com/800x400/aaaaff/ffffff',
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                subtopic.subtopicName.isNotEmpty ? subtopic.subtopicName : 'Subtopic Title',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+          // Subtopic Name
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              subtopic.subtopicName.isNotEmpty ? subtopic.subtopicName : 'Subtopic Title',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

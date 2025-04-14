@@ -54,7 +54,7 @@ class _CourseListViewState extends State<CourseListView> {
             onSelected: (value) async {
               if (value == 'logout') {
                 await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/login');
               }
               if (value == 'Provide Feedback') {
                 Navigator.pushNamed(context, '/feedback');

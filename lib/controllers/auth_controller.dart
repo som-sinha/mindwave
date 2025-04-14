@@ -15,7 +15,7 @@ class AuthController extends ChangeNotifier {
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      Navigator.pushNamed(context, '/addCourse');
+      Navigator.pushNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -67,6 +67,7 @@ class AuthController extends ChangeNotifier {
       );
 
       await auth.signInWithCredential(credential);
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? 'Google Sign-In failed')),
@@ -81,5 +82,16 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<void> signOut(BuildContext context) async {
+    try {
+      await GoogleSignIn().signOut();
+      await auth.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occurred while signing out'),
+        ),
+      );
+    }
   }
 }

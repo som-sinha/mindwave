@@ -49,9 +49,12 @@ class _AddCourseViewState extends State<AddCourseView> {
 
                 if (result != null) {
                   setState(() {
-                    _courseMaterial = result.paths.map((path) => File(path!)).toList();
+                    _courseMaterial = result.paths.whereType<String>().map((path) => File(path)).toList();
                     _filesPicked = true;
                   });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Files selected successfully!')),
+                  );
                 }
               },
               child: const Text('Upload Course Material (PDF)'),

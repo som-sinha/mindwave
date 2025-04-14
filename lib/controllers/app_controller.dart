@@ -117,14 +117,14 @@ class AppController extends ChangeNotifier {
           courseId,
           topicData['id'],
           subData['id'],
-          subData['genQuiz'],
+          subData['genQuiz']["id"],
         );
         final reviewQuiz = await fetchQuizById(
           userId,
           courseId,
           topicData['id'],
           subData['id'],
-          subData['reviewQuiz'],
+          subData['reviewQuiz']["id"],
         );
 
         subtopics.add(SubtopicModel(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindwave/controllers/auth_controller.dart';
+import 'package:mindwave/controllers/quiz_controller.dart';
+import 'package:mindwave/models/quiz_model.dart';
 import 'package:mindwave/models/subtopic_model.dart';
 import 'package:mindwave/views/add_course_view.dart';
 import 'package:mindwave/views/feedback_view.dart';
@@ -31,7 +33,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppController()),
         ChangeNotifierProvider(create: (_) => AuthController()),
-        ChangeNotifierProvider(create: (context) => QuizController()..initializeQuizzes(),)
+        // ChangeNotifierProvider(create: (context) => QuizController()..initializeQuizzes(),)
       ],
       child: const MainApp(),
     ),
@@ -45,7 +47,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/quiz-view',
+      initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginView(),
@@ -60,8 +62,32 @@ class MainApp extends StatelessWidget {
         },
         '/feedback': (context) => FeedbackView(),
         '/addCourse': (context) => AddCourseView(),
-        '/quiz': (context) => QuizView(),
-        '/quizStart': (context) => Quiz(),
+        '/quiz': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+
+          if (args is Set && args.length >= 3) {
+            final argsList = args.toList();
+            return QuizView(
+              genQuiz: argsList[0],
+              reviewQuiz: argsList[1],
+              userQuizzes: argsList[2],
+            );
+          } else {
+            return const Scaffold(
+              body: Center(child: Text('Invalid arguments passed to QuizView')),
+            );
+          }
+        },
+        '/quizStart': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+          if (args is QuizModel) {
+            return Quiz(quiz: args);
+          } else {
+            return const Scaffold(
+              body: Center(child: Text('Invalid quiz data passed to Quiz')),
+            );
+          }
+        },
         '/review': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as Map<String, String>;
