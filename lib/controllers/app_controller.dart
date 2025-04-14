@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:mindwave/controllers/auth_controller.dart';
 import 'package:mindwave/models/question_model.dart';
 import 'package:mindwave/models/quiz_model.dart';
 import 'package:mindwave/models/subtopic_model.dart';
@@ -58,7 +57,7 @@ class AppController extends ChangeNotifier {
             QuizModel([]),
           ));
       }
-      topics.add(TopicModel(course, t['topic']['topicName'], subtopics));
+      topics.add(TopicModel(t['topic']['topicName'], subtopics));
     }
     course.topics = topics;
     await _uploadToFirestore(userId, course);
@@ -70,8 +69,89 @@ class AppController extends ChangeNotifier {
 
   }
 
-  getCourses() {
+  fetchCourses(String userId) async {
+    final courseSnapshots = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('courses')
+        .get();
 
+    courses.clear();
+
+    for (final courseDoc in courseSnapshots.docs) {
+      final courseData = courseDoc.data();
+      final course = CourseModel(
+        courseData['subject'] ?? '',
+        courseData['courseName'] ?? '',
+        List<String>.from(courseData['courseMaterial'] ?? []),
+        [],
+      )..id = courseData['id'];
+
+      final topicSnapshots = await courseDoc.reference.collection('topics').get();
+      final topics = <TopicModel>[];
+
+      for (final topicDoc in topicSnapshots.docs) {
+        final topicData = topicDoc.data();
+        final topic = TopicModel(
+          topicData['topicName'] ?? '',
+          [],
+        )..id = topicData['id'];
+
+        final subtopicSnapshots = await topicDoc.reference.collection('subtopics').get();
+        final subtopics = <SubtopicModel>[];
+
+        for (final subtopicDoc in subtopicSnapshots.docs) {
+          final subtopicData = subtopicDoc.data();
+
+          final quizSnapshots = await subtopicDoc.reference.collection('quizzes').get();
+          QuizModel genQuiz = QuizModel([]);
+          QuizModel reviewQuiz = QuizModel([]);
+          List<QuizModel> userQuizzes = [];
+
+          for (final quizDoc in quizSnapshots.docs) {
+            final quizData = quizDoc.data();
+
+            final quiz = QuizModel(
+              (quizData['questions'] as List<dynamic>? ?? [])
+                  .whereType<Map<String, dynamic>>()
+                  .map((q) => QuestionModel(
+                        q['question'] ?? '',
+                        q['correctOption'] ?? '',
+                        (q['options'] as List<dynamic>? ?? []).cast<String>(),
+                      ))
+                  .toList(),
+            )..id = quizData['id'] ?? quizDoc.id;
+
+            if (quizDoc.id == 'genQuiz') {
+              genQuiz = quiz;
+            } else if (quizDoc.id == 'reviewQuiz') {
+              reviewQuiz = quiz;
+            } else {
+              userQuizzes.add(quiz);
+            }
+          }
+
+          final subtopic = SubtopicModel(
+            subtopicData['topic'] ?? '',
+            subtopicData['subtopicName'] ?? '',
+            subtopicData['description'] ?? '',
+            userQuizzes,
+            genQuiz,
+            reviewQuiz,
+          )..id = subtopicData['id'];
+
+          subtopics.add(subtopic);
+        }
+
+        topic.subtopics = subtopics;
+        topics.add(topic);
+      }
+
+      course.topics = topics;
+      courses.add(course);
+    }
+
+    notifyListeners();
   }
 
   _processCourseMaterial(userId, subject, courseName, mergedCourseMaterialLink) async {

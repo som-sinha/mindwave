@@ -13,4 +13,5 @@ class QuizModel {
       'questions': questions.map((q) => q.toFirestore()).toList(),
     };
   }
+
 }

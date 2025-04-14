@@ -3,6 +3,8 @@ import 'package:mindwave/controllers/auth_controller.dart';
 import 'package:mindwave/views/add_course_view.dart';
 import 'package:mindwave/views/feedback_view.dart';
 import 'package:mindwave/views/login_view.dart';
+import 'package:mindwave/views/quiz.dart';
+import 'package:mindwave/views/quiz_view.dart';
 import 'package:mindwave/views/signup_view.dart';
 import 'package:mindwave/views/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -33,8 +35,8 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -48,6 +50,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => CourseListView(),
         '/feedback': (context) => FeedbackView(),
         '/addCourse': (context) => AddCourseView(),
+        '/quiz': (context) => QuizView(),
+        '/quizStart': (context) => Quiz(),
         '/review': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as Map<String, String>;

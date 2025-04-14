@@ -63,7 +63,11 @@ class SubtopicView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GestureDetector(
               onTap: () {
-                // TODO: Navigate to quiz screen
+                Navigator.pushNamed(
+                  context,
+                  '/quiz',
+                  arguments: subtopic,
+                );
               },
               child: Container(
                 padding: const EdgeInsets.all(16),

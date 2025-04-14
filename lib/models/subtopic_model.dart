@@ -18,9 +18,9 @@ class SubtopicModel {
       'subtopicName': subtopicName,
       'description': description,
       'topic': topic,
-      'userQuizzes': userQuizzes.map((q) => q.id).toList(),
-      'genQuiz': genQuiz.id,
-      'reviewQuiz': reviewQuiz.id,
+      'genQuiz': genQuiz.toFirestore(),
+      'reviewQuiz': reviewQuiz.toFirestore(),
+      'userQuizzes': userQuizzes.map((q) => q.toFirestore()).toList(),
     };
   }  
 }
