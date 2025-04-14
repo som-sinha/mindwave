@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindwave/controllers/auth_controller.dart';
+import 'package:mindwave/views/add_course_view.dart';
 import 'package:mindwave/views/feedback_view.dart';
 import 'package:mindwave/views/login_view.dart';
 import 'package:mindwave/views/signup_view.dart';
@@ -45,6 +46,7 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignupView(),
         '/home': (context) => CourseListView(),
         '/feedback': (context) => FeedbackView(),
+        '/addCourse': (context) => AddCourseView(),
         '/review': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as Map<String, String>;
@@ -52,6 +54,7 @@ class MainApp extends StatelessWidget {
             subtopicName: args['subtopicName']!,
             summary: args['summary']!,
           );
+
         },
       },
     );

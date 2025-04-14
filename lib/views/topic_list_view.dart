@@ -57,7 +57,7 @@ class TopicListView extends StatelessWidget {
                 ),
               ),
               children:
-                  topic.quizzes.map((subtopic) {
+                  topic.subtopics.map((subtopic) {
                     return ListTile(
                       title: Text(subtopic.subtopicName),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),

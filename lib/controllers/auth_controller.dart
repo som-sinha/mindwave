@@ -5,14 +5,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthController extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final auth = FirebaseAuth.instance;
+
+  User? get currentUser => auth.currentUser;
 
   Future<void> signIn(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await auth.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/addCourse');
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -35,7 +38,7 @@ class AuthController extends ChangeNotifier {
     }
 
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
+      await auth.sendPasswordResetEmail(
         email: emailController.text.trim(),
       );
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +66,7 @@ class AuthController extends ChangeNotifier {
         accessToken: googleAuth.accessToken, // Optional
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await auth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? 'Google Sign-In failed')),

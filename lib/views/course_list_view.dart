@@ -99,14 +99,6 @@ class CourseListView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: course.courseImage,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -115,7 +107,7 @@ class CourseListView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Add course logic
+          Navigator.pushNamed(context, '/addCourse');
         },
         child: const Icon(Icons.add),
       ),

@@ -6,16 +6,16 @@ class TopicModel {
   String id;
   CourseModel course;
   String topicName;
-  List<SubtopicModel> quizzes;
+  List<SubtopicModel> subtopics;
   
-  TopicModel(this.course, this.topicName, this.quizzes) : id = Uuid().v4();
+  TopicModel(this.course, this.topicName, this.subtopics) : id = Uuid().v4();
 
     Map<String, dynamic> toFirestore() {
     return {
       'id': id,
       'course': course.id,
       'topicName': topicName,
-      'quizzes': quizzes.map((q) => q.id).toList(),
+      'quizzes': subtopics.map((st) => st.subtopicName).toList(),
     };
   }  
 }
