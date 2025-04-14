@@ -33,9 +33,10 @@ void main() async {
   );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -60,3 +61,4 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
