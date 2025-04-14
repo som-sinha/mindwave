@@ -10,7 +10,7 @@ class QuizModel {
   Map<String, dynamic> toFirestore() {
     return {
       'id' : id,
-      'questions': questions.map((q) => q.id).toList(),
+      'questions': questions.map((q) => q.toFirestore()).toList(),
     };
   }
 }

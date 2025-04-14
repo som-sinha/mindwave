@@ -15,7 +15,7 @@ class TopicModel {
       'id': id,
       'course': course.id,
       'topicName': topicName,
-      'quizzes': subtopics.map((st) => st.subtopicName).toList(),
+      'subtopics': subtopics.map((st) => st.subtopicName).toList(),
     };
   }  
 }

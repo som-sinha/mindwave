@@ -53,11 +53,7 @@ class AppController extends ChangeNotifier {
             QuizModel((genQuiz as List).map((q) => QuestionModel(
               q['questionText'],
               q['correctOption'],
-              Map<String, String>.fromIterable(
-                q['options'],
-                key: (e) => e,
-                value: (e) => e,
-              ),
+              (q['options'] as List).cast<String>(),
             )).toList()),
             QuizModel([]),
           ));
@@ -129,7 +125,8 @@ class AppController extends ChangeNotifier {
         final subtopicRef = topicRef.collection('subtopics').doc(subtopic.id);
         await subtopicRef.set(subtopic.toFirestore());
 
-        await subtopicRef.collection('quizzes').doc(subtopic.genQuiz.id).set(subtopic.genQuiz.toFirestore());
+        final quizRef = subtopicRef.collection('quizzes').doc(subtopic.genQuiz.id);
+        await quizRef.set(subtopic.genQuiz.toFirestore());
       }
     }
   }
